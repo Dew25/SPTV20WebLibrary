@@ -5,11 +5,13 @@
  */
 package servlets;
 
+import entity.Book;
 import entity.Reader;
 import entity.Role;
 import entity.User;
 import entity.UserRoles;
 import java.io.IOException;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import session.BookFacade;
 import session.ReaderFacade;
 import session.RoleFacade;
 import session.UserFacade;
@@ -30,10 +33,11 @@ import session.UserRolesFacade;
     "/showLogin",
     "/login",
     "/logout",
-    
+    "/listBooks",
     
 })
 public class LoginServlet extends HttpServlet {
+    @EJB private BookFacade bookFacade;
     @EJB UserFacade userFacade;
     @EJB ReaderFacade readerFacade;
     @EJB RoleFacade roleFacade;
@@ -123,6 +127,11 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("activeLogout", true);
                 request.getRequestDispatcher("/listBooks").forward(request, response);
                 break;
+            case "/listBooks":
+                List<Book> books = bookFacade.findAll();
+                request.setAttribute("books", books);
+                request.getRequestDispatcher("/listBooks.jsp").forward(request, response);
+                break;    
         }
     }
 
