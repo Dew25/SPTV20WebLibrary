@@ -7,6 +7,7 @@ package servlets;
 
 import entity.Author;
 import entity.Book;
+import entity.User;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import session.AuthorFacade;
 import session.BookFacade;
+import session.UserRolesFacade;
 
 /**
  *
@@ -26,11 +29,12 @@ import session.BookFacade;
 @WebServlet(name = "MyServlet",loadOnStartup = 1, urlPatterns = {
     "/addBook",
     "/createBook",
-    "/listBooks",
+    
 })
 public class BookServlet extends HttpServlet {
     @EJB private AuthorFacade authorFacade;
     @EJB private BookFacade bookFacade;
+    @EJB private UserRolesFacade userRolesFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,6 +48,20 @@ public class BookServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            request.setAttribute("info", "Авторизуйтесь!");
+            request.getRequestDispatcher("/showLogin").forward(request, response);
+        }
+        User authUser = (User) session.getAttribute("authUser");
+        if(authUser == null){
+            request.setAttribute("info", "Авторизуйтесь!");
+            request.getRequestDispatcher("/showLogin").forward(request, response);
+        }
+        if(!userRolesFacade.isRole("MANAGER",authUser)){
+            request.setAttribute("info", "У вас нет прав!");
+            request.getRequestDispatcher("/showLogin").forward(request, response);
+        }
         String path = request.getServletPath();
         switch (path) {
             case "/addBook":
@@ -96,11 +114,7 @@ public class BookServlet extends HttpServlet {
                 request.setAttribute("info", "Книга добавлена");
                 request.getRequestDispatcher("/listBooks").forward(request, response);
                 break;
-            case "/listBooks":
-                List<Book> books = bookFacade.findAll();
-                request.setAttribute("books", books);
-                request.getRequestDispatcher("/listBooks.jsp").forward(request, response);
-                break;
+            
             
         }
         
