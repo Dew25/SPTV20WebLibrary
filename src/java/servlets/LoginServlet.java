@@ -102,7 +102,6 @@ public class LoginServlet extends HttpServlet {
                 request.getRequestDispatcher("/showLogin.jsp").forward(request, response);
                 break;
             case "/login":
-                
                 String login = request.getParameter("login");
                 String password = request.getParameter("password");
                 // Authentification

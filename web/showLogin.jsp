@@ -18,7 +18,7 @@
                 <input type="text" class="form-control"  name="password" id="password" placeholder="">
             </div>
             <input class="btn btn-primary my-3" type="submit" value="Войти">
-            <h4 class="w-100 text-center"><a href="showRegistration">Зарегистрироваться</a></h4>
+            <h4 class="w-100 mt-3 text-center"><a href="showRegistration">Зарегистрироваться</a></h4>
         </form>
     </div>
 </div>

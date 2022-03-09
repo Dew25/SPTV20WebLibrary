@@ -1,5 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<h1 class="w-100 text-center my-5">Список книг</h1>
+<h1 class="w-100 text-center my-5">Новая книга</h1>
 <div class="w-100 d-flex justify-content-center">
     <div class="card border-0 p-5 m-4" style="width: 30rem;">
         <form action="createBook" method="POST">
