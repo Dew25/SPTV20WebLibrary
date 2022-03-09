@@ -19,6 +19,14 @@
           <li class="nav-item">
             <a class='nav-link <c:if test="${activeAddBook eq true}">active</c:if>'  aria-current="page" href="addBook">Добавить книгу</a>
           </li>
+          <li class="nav-item">
+            <a class='nav-link <c:if test="${activeShowTakeOnBooks eq true}">active</c:if>'  aria-current="page" href="showTakeOnBooks">Взять книгу</a>
+          </li>
+          <li class="nav-item">
+            <a class='nav-link <c:if test="${activeShowTakeOnBooks eq true}">active</c:if>'  aria-current="page" href="showReturnBook">Вернуть книгу</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav  mb-2 mb-lg-0">
           <c:if test="${authUser eq null}">
             <li class="nav-item">
               <a class='nav-link <c:if test="${activeShowLogin eq true}">active</c:if>'  aria-current="page" href="showLogin">Вход</a>

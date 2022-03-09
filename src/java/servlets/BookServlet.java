@@ -7,6 +7,8 @@ package servlets;
 
 import entity.Author;
 import entity.Book;
+import entity.BookCover;
+import entity.Cover;
 import entity.User;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.AuthorFacade;
+import session.BookCoverFacade;
 import session.BookFacade;
+import session.CoverFacade;
 import session.UserRolesFacade;
 
 /**
@@ -35,6 +39,8 @@ public class BookServlet extends HttpServlet {
     @EJB private AuthorFacade authorFacade;
     @EJB private BookFacade bookFacade;
     @EJB private UserRolesFacade userRolesFacade;
+    @EJB private CoverFacade coverFacade;
+    @EJB private BookCoverFacade bookCoverFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -68,6 +74,8 @@ public class BookServlet extends HttpServlet {
                 request.setAttribute("activeAddBook", true);
                 List<Author> authors = authorFacade.findAll();
                 request.setAttribute("authors", authors);
+                List<Cover> covers = coverFacade.findAll();
+                request.setAttribute("covers", covers);
                 request.getRequestDispatcher("/WEB-INF/addBook.jsp").forward(request, response);
                 break;
             case "/createBook":
@@ -75,10 +83,12 @@ public class BookServlet extends HttpServlet {
                 String[] authorsId = request.getParameterValues("authorsId");
                 String releaseYear = request.getParameter("releaseYear");
                 String quantity = request.getParameter("quantity");
-                if("".equals(bookName) || "".equals(releaseYear) || "".equals(quantity)){
+                String coverId = request.getParameter("coverId");
+                if("".equals(bookName) || "".equals(releaseYear) || "".equals(quantity) || "".equals(coverId)){
                     request.setAttribute("bookName", bookName);
                     request.setAttribute("releaseYear", releaseYear);
                     request.setAttribute("quantity", quantity);
+                    request.setAttribute("coverId", coverId);
                     request.setAttribute("info", "Заполните все поля");
                     request.getRequestDispatcher("/addBook").forward(request, response);
                     break;
@@ -93,6 +103,7 @@ public class BookServlet extends HttpServlet {
                 }
                 Book book = new Book();
                 book.setBookName(bookName);
+                
                 List<Author> listAuthors = new ArrayList<>();
                 for (int i = 0; i < authorsId.length; i++) {
                     listAuthors.add(authorFacade.find(Long.parseLong(authorsId[i])));
@@ -111,6 +122,11 @@ public class BookServlet extends HttpServlet {
                 }
                 book.setCount(book.getQuantity());
                 bookFacade.create(book);
+                Cover cover = coverFacade.find(Long.parseLong(coverId));
+                BookCover bookCover = new BookCover();
+                bookCover.setBook(book);
+                bookCover.setCover(cover);
+                bookCoverFacade.create(bookCover);
                 request.setAttribute("info", "Книга добавлена");
                 request.getRequestDispatcher("/listBooks").forward(request, response);
                 break;

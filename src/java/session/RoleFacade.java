@@ -6,6 +6,8 @@
 package session;
 
 import entity.Role;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,8 +31,14 @@ public class RoleFacade extends AbstractFacade<Role> {
         super(Role.class);
     }
 
-    Role findByRoleName(String roleName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Role findByRoleName(String roleName) {
+        try {
+            return (Role) em.createQuery("SELECT r FROM Role r WHERE r.roleName=:roleName")
+                    .setParameter("roleName", roleName)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }

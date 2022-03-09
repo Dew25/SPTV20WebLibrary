@@ -1,6 +1,4 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <h1 class="w-100 text-center my-5">Список книг</h1>
 <div class="w-100 d-flex justify-content-center">
     <c:forEach var="entry" items="${mapBooks}">
@@ -15,6 +13,7 @@
             </p>
             <p class="card-text">${entry.key.releaseYear}</p>
             <p class="card-text">${entry.key.count} шт.</p>
+            <p class="card-text"><a href="takeOnBook?bookId=${entry.key.id}">Взять книгу</a></p>
           </div>
         </div>
     </c:forEach>

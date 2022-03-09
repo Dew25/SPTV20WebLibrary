@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<h1 class="w-100 text-center my-5">Список книг</h1>
+<h1 class="w-100 text-center my-5">Новая книга</h1>
+<a class="w-100 text-success text-center" href="showUploadCover">Добавить новую обложку</a>
 <div class="w-100 d-flex justify-content-center">
     <div class="card border-0 p-5 m-4" style="width: 30rem;">
         <form action="createBook" method="POST">
@@ -22,6 +23,14 @@
             <div class="mb-3">
                 <label for="quantity" class="form-label">Количество книг</label>
                 <input type="text" class="form-control w-25"  name="quantity" id="quantity" placeholder="">
+            </div>
+            <div class="mb-3">
+                <label for="coverId" class="form-label">Обложки</label>
+                <select name="coverId" id="coverId" class="form-select">
+                    <c:forEach var="cover" items="${covers}">
+                        <option value="${cover.id}">${cover.description}</option>
+                    </c:forEach>
+                </select>
             </div>
             <input class="btn btn-primary mt-3" type="submit" value="Запомнить">
         </form>

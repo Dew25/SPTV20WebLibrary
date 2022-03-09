@@ -6,6 +6,8 @@
 package session;
 
 import entity.Book;
+import entity.User;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +30,7 @@ public class BookFacade extends AbstractFacade<Book> {
     public BookFacade() {
         super(Book.class);
     }
+
+    
     
 }

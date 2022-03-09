@@ -6,12 +6,16 @@
 package servlets;
 
 import entity.Book;
+import entity.BookCover;
+import entity.Cover;
 import entity.Reader;
 import entity.Role;
 import entity.User;
 import entity.UserRoles;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import session.BookCoverFacade;
 import session.BookFacade;
 import session.ReaderFacade;
 import session.RoleFacade;
@@ -34,14 +39,19 @@ import session.UserRolesFacade;
     "/login",
     "/logout",
     "/listBooks",
+    "/showRegistration",
+    "/registration",
+    
     
 })
 public class LoginServlet extends HttpServlet {
     @EJB private BookFacade bookFacade;
-    @EJB UserFacade userFacade;
-    @EJB ReaderFacade readerFacade;
-    @EJB RoleFacade roleFacade;
-    @EJB UserRolesFacade userRolesFacade;
+    @EJB private UserFacade userFacade;
+    @EJB private ReaderFacade readerFacade;
+    @EJB private RoleFacade roleFacade;
+    @EJB private UserRolesFacade userRolesFacade;
+    @EJB private BookCoverFacade bookCoverFacade;
+
     @Override
     public void init() throws ServletException {
         super.init(); //To change body of generated methods, choose Tools | Templates.
@@ -89,7 +99,7 @@ public class LoginServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException{
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         String path = request.getServletPath();
@@ -99,7 +109,6 @@ public class LoginServlet extends HttpServlet {
                 request.getRequestDispatcher("/showLogin.jsp").forward(request, response);
                 break;
             case "/login":
-                
                 String login = request.getParameter("login");
                 String password = request.getParameter("password");
                 // Authentification
@@ -129,9 +138,77 @@ public class LoginServlet extends HttpServlet {
                 break;
             case "/listBooks":
                 List<Book> books = bookFacade.findAll();
-                request.setAttribute("books", books);
+                Map<Book,Cover> mapBooks = new HashMap<>();
+                for(Book b : books){
+                    BookCover bookCover = bookCoverFacade.findCoverByBook(b);
+                    mapBooks.put(b, bookCover.getCover());
+                }
+                request.setAttribute("mapBooks", mapBooks);
                 request.getRequestDispatcher("/listBooks.jsp").forward(request, response);
                 break;    
+            case "/showRegistration":
+                request.getRequestDispatcher("/showRegistration.jsp").forward(request, response);
+                break;
+            case "/registration":
+                String firstname = request.getParameter("firstname");
+                String lastname = request.getParameter("lastname");
+                String phone = request.getParameter("phone");
+                login = request.getParameter("login");
+                String password1 = request.getParameter("password1");
+                String password2 = request.getParameter("password2");
+                if(!password1.equals(password2)){
+                    request.setAttribute("firstname", firstname);
+                    request.setAttribute("lastname", lastname);
+                    request.setAttribute("phone", phone);
+                    request.setAttribute("login", login);
+                    request.setAttribute("info", "Не совпадают пароли");
+                    request.getRequestDispatcher("/showRegistration").forward(request, response);
+                    break;
+                }
+                if("".equals(firstname) 
+                        || "".equals(lastname)
+                        || "".equals(phone)
+                        || "".equals(login)
+                        || "".equals(password1)
+                        || "".equals(password2)
+                        ){
+                    request.setAttribute("firstname", firstname);
+                    request.setAttribute("lastname", lastname);
+                    request.setAttribute("phone", phone);
+                    request.setAttribute("login", login);
+                    request.setAttribute("info", "Заполните все поля");
+                    request.getRequestDispatcher("/showRegistration").forward(request, response);
+                    break;
+                }
+                Reader reader = new Reader();
+                reader.setFirstname(firstname);
+                reader.setLastname(lastname);
+                reader.setPhone(phone);
+                readerFacade.create(reader);
+                User user = new User();
+                user.setLogin(login);
+                user.setPassword(password1);
+                user.setReader(reader);
+                userFacade.create(user);
+                
+                Role readerRole = roleFacade.findByRoleName("READER");
+                if(readerRole == null){
+                    request.setAttribute("firstname", firstname);
+                    request.setAttribute("lastname", lastname);
+                    request.setAttribute("phone", phone);
+                    request.setAttribute("login", login);
+                    request.setAttribute("info", "Не найдена роль! Если ошибка повторится, обратитесь к разаработчику :)");
+                    request.getRequestDispatcher("/showRegistration").forward(request, response);
+                    break;
+                }
+                UserRoles userRoles = new UserRoles();
+                userRoles.setRole(readerRole);
+                userRoles.setUser(user);
+                userRolesFacade.create(userRoles);
+                request.setAttribute("info", "Добавлен новый пользователь");
+                request.getRequestDispatcher("/listBooks").forward(request, response);
+                break;
+
         }
     }
 
