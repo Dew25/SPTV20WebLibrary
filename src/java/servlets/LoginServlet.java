@@ -124,6 +124,9 @@ public class LoginServlet extends HttpServlet {
                 }
                 HttpSession session = request.getSession(true);
                 session.setAttribute("authUser", authUser);
+                String topRoleAuthUser = userRolesFacade.getTopRole(authUser);
+                session.setAttribute("topRoleAuthUser", topRoleAuthUser);
+//                request.setAttribute("topRoleAuthUser", topRoleAuthUser);
                 request.setAttribute("info", "Здравствуйте "+authUser.getReader().getFirstname());
                 request.getRequestDispatcher("/listBooks").forward(request, response);
                 break;

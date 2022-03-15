@@ -35,7 +35,7 @@ import session.UserRolesFacade;
     "/createBook",
     
 })
-public class BookServlet extends HttpServlet {
+public class ManagerServlet extends HttpServlet {
     @EJB private AuthorFacade authorFacade;
     @EJB private BookFacade bookFacade;
     @EJB private UserRolesFacade userRolesFacade;
@@ -68,6 +68,7 @@ public class BookServlet extends HttpServlet {
             request.setAttribute("info", "У вас нет прав!");
             request.getRequestDispatcher("/showLogin").forward(request, response);
         }
+        request.setAttribute("topRoleAuthRole", session.getAttribute("topRoleAuthRole"));
         String path = request.getServletPath();
         switch (path) {
             case "/addBook":
