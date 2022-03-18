@@ -68,7 +68,7 @@ public class ManagerServlet extends HttpServlet {
             request.setAttribute("info", "У вас нет прав!");
             request.getRequestDispatcher("/showLogin").forward(request, response);
         }
-        request.setAttribute("topRoleAuthRole", session.getAttribute("topRoleAuthRole"));
+        request.setAttribute("topRole", session.getAttribute("topRole"));
         String path = request.getServletPath();
         switch (path) {
             case "/addBook":

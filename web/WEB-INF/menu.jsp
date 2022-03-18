@@ -12,31 +12,32 @@
         <span class="navbar-toggler-icon"></span>
       </button>
           <c:choose>
-              <c:when test="${topRoleAuthUser eq 'ADMINISTRATOR'}">
+              <c:when test="${topRole eq 'ADMINISTRATOR'}">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"> <a class='nav-link <c:if test="${activeAddAuthor eq true}">active</c:if>' aria-current="page" href="addAuthor">Добавить автора</a> </li>
                     <li class="nav-item"><a class='nav-link <c:if test="${activeAddBook eq true}">active</c:if>'  aria-current="page" href="addBook">Добавить книгу</a></li>
                     <li class="nav-item"><a class='nav-link <c:if test="${activeShowTakeOnBooks eq true}">active</c:if>'  aria-current="page" href="showTakeOnBooks">Взять книгу</a></li>
-                    <li class="nav-item"><a class='nav-link <c:if test="${activeShowTakeOnBooks eq true}">active</c:if>'  aria-current="page" href="showReturnBook">Вернуть книгу</a> </li>
+                    <li class="nav-item"><a class='nav-link <c:if test="${activeShowReturnBook eq true}">active</c:if>'  aria-current="page" href="showReturnBook">Вернуть книгу</a> </li>
+                    <li class="nav-item"><a class='nav-link <c:if test="${activeShowAdminPanel eq true}">active</c:if>'  aria-current="page" href="showAdminPanel">Панель администратора</a> </li>
                 </ul>
               </c:when>
-              <c:when test="${topRoleAuthUser eq 'MANAGER'}">
+              <c:when test="${topRole eq 'MANAGER'}">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"> <a class='nav-link <c:if test="${activeAddAuthor eq true}">active</c:if>' aria-current="page" href="addAuthor">Добавить автора</a> </li>
                     <li class="nav-item"><a class='nav-link <c:if test="${activeAddBook eq true}">active</c:if>'  aria-current="page" href="addBook">Добавить книгу</a></li>
                     <li class="nav-item"><a class='nav-link <c:if test="${activeShowTakeOnBooks eq true}">active</c:if>'  aria-current="page" href="showTakeOnBooks">Взять книгу</a></li>
-                    <li class="nav-item"><a class='nav-link <c:if test="${activeShowTakeOnBooks eq true}">active</c:if>'  aria-current="page" href="showReturnBook">Вернуть книгу</a> </li>
+                    <li class="nav-item"><a class='nav-link <c:if test="${activeShowReturnBook eq true}">active</c:if>'  aria-current="page" href="showReturnBook">Вернуть книгу</a> </li>
                 </ul>
               </c:when>
-              <c:when test="${topRoleAuthUser eq 'READER'}">
+              <c:when test="${topRole eq 'READER'}">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class='nav-link <c:if test="${activeShowTakeOnBooks eq true}">active</c:if>'  aria-current="page" href="showTakeOnBooks">Взять книгу</a></li>
-                    <li class="nav-item"><a class='nav-link <c:if test="${activeShowTakeOnBooks eq true}">active</c:if>'  aria-current="page" href="showReturnBook">Вернуть книгу</a> </li>
+                    <li class="nav-item"><a class='nav-link <c:if test="${activeShowReturnBook eq true}">active</c:if>'  aria-current="page" href="showReturnBook">Вернуть книгу</a> </li>
                 </ul>
               </c:when>
-              <c:when test="${topRoleAuthUser eq NULL}">
+              <c:when test="${topRole eq NULL}">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"> <a class='nav-link <c:if test="${activeAddAuthor eq true}">active</c:if>' aria-current="page" href="addAuthor">Добавить автора</a> </li>
+                    <li class="nav-item"> <a class='nav-link <c:if test="${activeListBooks eq true}">active</c:if>' aria-current="page" href="listBooks">Список книг</a> </li>
                 </ul>
               </c:when>
           </c:choose>

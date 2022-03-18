@@ -81,7 +81,7 @@ public class LoginServlet extends HttpServlet {
         userRoles.setUser(user);
         userRolesFacade.create(userRoles);
         role = new Role();
-        role.setRoleName("ADMINSTRATOR");
+        role.setRoleName("ADMINISTRATOR");
         roleFacade.create(role);
         userRoles = new UserRoles();
         userRoles.setRole(role);
@@ -125,7 +125,7 @@ public class LoginServlet extends HttpServlet {
                 HttpSession session = request.getSession(true);
                 session.setAttribute("authUser", authUser);
                 String topRoleAuthUser = userRolesFacade.getTopRole(authUser);
-                session.setAttribute("topRoleAuthUser", topRoleAuthUser);
+                session.setAttribute("topRole", topRoleAuthUser);
 //                request.setAttribute("topRoleAuthUser", topRoleAuthUser);
                 request.setAttribute("info", "Здравствуйте "+authUser.getReader().getFirstname());
                 request.getRequestDispatcher("/listBooks").forward(request, response);
@@ -147,6 +147,7 @@ public class LoginServlet extends HttpServlet {
                     mapBooks.put(b, bookCover.getCover());
                 }
                 request.setAttribute("mapBooks", mapBooks);
+                request.setAttribute("activeListBooks", true);
                 request.getRequestDispatcher("/listBooks.jsp").forward(request, response);
                 break;    
             case "/showRegistration":

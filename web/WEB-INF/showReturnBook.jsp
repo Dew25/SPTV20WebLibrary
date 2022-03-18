@@ -12,7 +12,7 @@
                 </c:forEach>
             </p>
             <p class="card-text">${entry.key.book.releaseYear}</p>
-            <p class="card-text">${entry.key.book.count} шт.</p>
+            
             <p class="card-text"><a href="returnBook?historyId=${entry.key.id}">Вернуть книгу</a></p>
           </div>
         </div>

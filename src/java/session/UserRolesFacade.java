@@ -49,10 +49,57 @@ public class UserRolesFacade extends AbstractFacade<UserRoles> {
         List<String> listRoleNames = em.createQuery("SELECT ur.role.roleName FROM UserRoles ur WHERE ur.user = :user")
                 .setParameter("user", user)
                 .getResultList();
-        if(listRoleNames.contains("ADMINSTRATOR"))return "ADMINSTRATOR";
+        if(listRoleNames.contains("ADMINISTRATOR"))return "ADMINISTRATOR";
         if(listRoleNames.contains("MANAGER"))return "MANAGER";
         if(listRoleNames.contains("READER"))return "READER";
         return null;
     }
-    
+
+    public void setRoleToUser(Role role, User user) {
+        // логика метода
+        removeAllUserRoles(user);
+        UserRoles userRoles = null;
+        if("ADMINISTRATOR".equals(role.getRoleName())){
+            Role roleREADER = roleFacade.findByRoleName("READER");
+            userRoles = new UserRoles();
+            userRoles.setRole(roleREADER);
+            userRoles.setUser(user);
+            this.create(userRoles);
+            Role roleMANAGER = roleFacade.findByRoleName("MANAGER");
+            userRoles = new UserRoles();
+            userRoles.setRole(roleMANAGER);
+            userRoles.setUser(user);
+            this.create(userRoles);
+            Role roleADMINISTRATOR = roleFacade.findByRoleName("ADMINISTRATOR");
+            userRoles = new UserRoles();
+            userRoles.setRole(roleADMINISTRATOR);
+            userRoles.setUser(user);
+            this.create(userRoles);
+        }
+        if("MANAGER".equals(role.getRoleName())){
+            Role roleREADER = roleFacade.findByRoleName("READER");
+            userRoles = new UserRoles();
+            userRoles.setRole(roleREADER);
+            userRoles.setUser(user);
+            this.create(userRoles);
+            Role roleMANAGER = roleFacade.findByRoleName("MANAGER");
+            userRoles = new UserRoles();
+            userRoles.setRole(roleMANAGER);
+            userRoles.setUser(user);
+            this.create(userRoles);
+        }
+        if("READER".equals(role.getRoleName())){
+            Role roleREADER = roleFacade.findByRoleName("READER");
+            userRoles = new UserRoles();
+            userRoles.setRole(roleREADER);
+            userRoles.setUser(user);
+            this.create(userRoles);
+        }
+        
+    }
+    private void removeAllUserRoles(User user){
+        em.createQuery("DELETE FROM UserRoles ur WHERE ur.user = :user")
+                .setParameter("user", user)
+                .executeUpdate();
+    }
 }

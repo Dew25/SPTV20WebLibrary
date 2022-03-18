@@ -76,6 +76,7 @@ public class ReaderServlet extends HttpServlet {
             request.setAttribute("info", "У вас нет прав!");
             request.getRequestDispatcher("/showLogin").forward(request, response);
         }
+        session.setAttribute("topRole", userRolesFacade.getTopRole(authUser));
         String path = request.getServletPath();
         switch (path) {
             case "/showTakeOnBooks":
@@ -116,8 +117,8 @@ public class ReaderServlet extends HttpServlet {
                 Map<History, Cover> mapHistoryWidthReadengBook = new HashMap<>();
                 List<History> historiesWithReadingBook = historyFacade.findHistoriesWithReadingBook(authUser.getReader());
                 for (History historyWithReadingBook : historiesWithReadingBook) {
-                    Cover cover = coverFacade.find(historyWithReadingBook.getBook().getId());
-                    mapHistoryWidthReadengBook.put(historyWithReadingBook, cover);
+                    BookCover bookCover = bookCoverFacade.find(historyWithReadingBook.getBook().getId());
+                    mapHistoryWidthReadengBook.put(historyWithReadingBook, bookCover.getCover());
                 }
                 request.setAttribute("mapHistoryWidthReadengBook", mapHistoryWidthReadengBook);
                 request.getRequestDispatcher("/WEB-INF/showReturnBook.jsp").forward(request, response);
